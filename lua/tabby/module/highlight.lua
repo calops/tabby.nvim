@@ -22,7 +22,7 @@ local registered_highlight = {}
 ---register highlight object to nvim
 ---@param hl TabbyHighlightObject
 ---@return string highlight group name
-function highlight.register(hl)
+function highlight.register(hl, group_name)
   vim.validate({
     fg = { hl.fg, 'string', true },
     bg = { hl.bg, 'string', true },
@@ -32,8 +32,12 @@ function highlight.register(hl)
   local nvim_keys = { 'guifg', 'guibg', 'gui' }
 
   local groups = { 'TabbyHL' }
-  for _, k in ipairs(tabby_keys) do
-    groups[#groups + 1] = hl[k] or 'NONE'
+  if group_name == nil then
+    for _, k in ipairs(tabby_keys) do
+      groups[#groups + 1] = hl[k] or 'NONE'
+    end
+  else
+    groups[#groups + 1] = group_name
   end
   local group = string.gsub(table.concat(groups, '_'), '#', '')
   if registered_highlight[group] == true then
